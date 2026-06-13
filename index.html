@@ -5,25 +5,190 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>420 Robotics Camera</title>
     <style>
-        body { margin: 0; background-color: #02040a; color: white; font-family: sans-serif; display: flex; flex-direction: column; min-height: 100vh; justify-content: space-between; padding: 16px; box-sizing: border-box; }
-        header { border-bottom: 1px solid #1f2937; text-align: center; padding-bottom: 12px; }
-        h1 { font-size: 28px; font-weight: 900; margin: 0; letter-spacing: 0.05em; }
-        .red { color: #ef171f; } .blue { color: #2563eb; }
-        p.subtitle { font-size: 11px; color: #6b7280; letter-spacing: 0.2em; margin: 4px 0 0 0; text-transform: uppercase; }
-        main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 24px 0; width: 100%; }
-        .menu { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 16px; }
-        button { width: 100%; padding: 20px; color: white; font-weight: bold; border: none; border-radius: 14px; font-size: 18px; letter-spacing: 0.05em; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: background 0.2s; }
-        #btn-camera { background: #ef171f; }
-        #btn-viewer { background: #2563eb; }
-        
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-color: #02040a;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: space-between;
+            padding: 16px;
+        }
+
+        header {
+            border-bottom: 1px solid #1f2937;
+            text-align: center;
+            padding-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: 0.05em;
+        }
+
+        .red {
+            color: #ef171f;
+        }
+
+        .blue {
+            color: #2563eb;
+        }
+
+        p.subtitle {
+            font-size: 11px;
+            color: #6b7280;
+            letter-spacing: 0.2em;
+            margin: 4px 0 0 0;
+            text-transform: uppercase;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 24px 0;
+            width: 100%;
+        }
+
+        .menu {
+            width: 100%;
+            max-width: 340px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 20px;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 14px;
+            font-size: 18px;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        button:active {
+            opacity: 0.85;
+            transform: scale(0.98);
+        }
+
+        #btn-camera {
+            background: #ef171f;
+        }
+
+        #btn-camera:hover {
+            background: #d91119;
+        }
+
+        #btn-viewer {
+            background: #2563eb;
+        }
+
+        #btn-viewer:hover {
+            background: #1d4ed8;
+        }
+
         /* Video Stream Container */
-        .video-container { width: 100%; max-width: 400px; display: none; flex-direction: column; gap: 12px; }
-        video { width: 100%; border-radius: 14px; background: #000; border: 2px solid #1f2937; transform: scaleX(-1); }
-        .status-tag { text-align: center; font-size: 14px; color: #10b981; font-weight: bold; }
-        
-        footer { margin-bottom: 20px; text-align: center; }
-        .footer-tag { font-size: 11px; color: #9ca3af; background: rgba(3, 7, 18, 0.6); padding: 8px 16px; border-radius: 9999px; border: 1px solid rgba(31, 41, 55, 0.5); display: inline-block; }
-        a { color: #2563eb; text-decoration: underline; font-weight: bold; }
+        .video-container {
+            width: 100%;
+            max-width: 400px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            animation: fadeIn 0.4s ease-in;
+        }
+
+        .video-container.visible {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        video {
+            width: 100%;
+            border-radius: 14px;
+            background: #000;
+            border: 2px solid #1f2937;
+            transform: scaleX(-1);
+            max-height: 500px;
+            object-fit: cover;
+        }
+
+        .status-tag {
+            text-align: center;
+            font-size: 14px;
+            color: #10b981;
+            font-weight: bold;
+            padding: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        #btn-back {
+            background: #374151;
+            padding: 12px;
+        }
+
+        #btn-back:hover {
+            background: #4b5563;
+        }
+
+        footer {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .footer-tag {
+            font-size: 11px;
+            color: #9ca3af;
+            background: rgba(3, 7, 18, 0.6);
+            padding: 8px 16px;
+            border-radius: 9999px;
+            border: 1px solid rgba(31, 41, 55, 0.5);
+            display: inline-block;
+        }
+
+        a {
+            color: #2563eb;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .error-message {
+            color: #fca5a5;
+            background: rgba(239, 23, 31, 0.1);
+            border: 1px solid rgba(239, 23, 31, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            margin: 12px 0;
+        }
     </style>
 </head>
 <body>
@@ -37,14 +202,15 @@
         <!-- Main Selection Menu -->
         <div id="menu-layer" class="menu">
             <button id="btn-camera" onclick="startLocalCamera()">Setup Camera Mode</button>
-            <button id="btn-viewer" onclick="alert('Viewer Mode requires signaling server config.')">Open Viewer Mode</button>
+            <button id="btn-viewer" onclick="openViewerMode()">Open Viewer Mode</button>
         </div>
 
         <!-- Live Camera Stream View Layer -->
         <div id="video-layer" class="video-container">
             <video id="local-preview" autoplay playsinline muted></video>
             <div id="stream-status" class="status-tag">SYSTEM LIVE</div>
-            <button id="btn-back" style="background: #374151; padding: 12px;" onclick="stopLocalCamera()">Close Camera</button>
+            <div id="error-display"></div>
+            <button id="btn-back" onclick="stopLocalCamera()">Close Camera</button>
         </div>
     </main>
 
@@ -62,26 +228,49 @@
             const videoLayer = document.getElementById('video-layer');
             const videoElement = document.getElementById('local-preview');
             const statusTag = document.getElementById('stream-status');
+            const errorDisplay = document.getElementById('error-display');
 
             try {
+                // Clear any previous errors
+                errorDisplay.innerHTML = '';
+
                 // Request native hardware permissions for the camera video stream
+                // Using facingMode: "environment" for back-facing/robot camera
                 localStream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: "environment" }, // Standard robot/back-facing camera tracking
+                    video: {
+                        facingMode: "environment",
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
                     audio: false
                 });
-                
+
                 // Attach hardware stream directly to HTML5 video element
                 videoElement.srcObject = localStream;
-                
+
                 // Toggle view layers smoothly
                 menuLayer.style.display = 'none';
-                videoLayer.style.display = 'flex';
+                videoLayer.classList.add('visible');
                 statusTag.innerText = "SYSTEM LIVE: CAPTURING FRAMES";
                 statusTag.style.color = "#10b981";
 
             } catch (error) {
-                console.error("Hardware access failed:", error);
-                alert("Camera Initialization Failed: Ensure WebKit/App container permissions are enabled for camera hardware access.");
+                console.error("Camera initialization failed:", error);
+
+                let errorMessage = "Camera access denied. ";
+                if (error.name === 'NotAllowedError') {
+                    errorMessage += "Permission required to access camera hardware.";
+                } else if (error.name === 'NotFoundError') {
+                    errorMessage += "No camera device found on this system.";
+                } else if (error.name === 'NotReadableError') {
+                    errorMessage += "Camera is already in use by another application.";
+                } else if (error.name === 'SecurityError') {
+                    errorMessage += "Secure context (HTTPS) required for camera access.";
+                } else {
+                    errorMessage += error.message || "Unknown error occurred.";
+                }
+
+                errorDisplay.innerHTML = `<div class="error-message">${errorMessage}</div>`;
             }
         }
 
@@ -89,17 +278,31 @@
             const menuLayer = document.getElementById('menu-layer');
             const videoLayer = document.getElementById('video-layer');
             const videoElement = document.getElementById('local-preview');
+            const errorDisplay = document.getElementById('error-display');
 
             if (localStream) {
                 // Shut down camera hardware sensors to save battery
                 localStream.getTracks().forEach(track => track.stop());
+                localStream = null;
                 videoElement.srcObject = null;
             }
 
             // Return to main menu layout
-            videoLayer.style.display = 'none';
+            videoLayer.classList.remove('visible');
             menuLayer.style.display = 'flex';
+            errorDisplay.innerHTML = '';
         }
+
+        function openViewerMode() {
+            alert('Viewer Mode requires signaling server configuration. Configure WebRTC signaling endpoints to enable remote camera streaming.');
+        }
+
+        // Handle page visibility changes to stop camera when tab loses focus
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && localStream) {
+                stopLocalCamera();
+            }
+        });
     </script>
 </body>
 </html>
