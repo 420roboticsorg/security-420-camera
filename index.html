@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>420 Robotics Camera</title>
+    <style>
+        body { margin: 0; background-color: #02040a; color: white; font-family: sans-serif; display: flex; flex-direction: column; min-height: 100vh; justify-content: space-between; padding: 16px; box-sizing: border-box; }
+        header { border-bottom: 1px solid #1f2937; text-align: center; padding-bottom: 12px; }
+        h1 { font-size: 28px; font-weight: 900; margin: 0; letter-spacing: 0.05em; }
+        .red { color: #ef171f; } .blue { color: #2563eb; }
+        p.subtitle { font-size: 11px; color: #6b7280; letter-spacing: 0.2em; margin: 4px 0 0 0; text-transform: uppercase; }
+        main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 24px 0; width: 100%; }
+        .menu { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 16px; }
+        button { width: 100%; padding: 20px; color: white; font-weight: bold; border: none; border-radius: 14px; font-size: 18px; letter-spacing: 0.05em; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: background 0.2s; }
+        #btn-camera { background: #ef171f; }
+        #btn-viewer { background: #2563eb; }
+        
+        /* Video Stream Container */
+        .video-container { width: 100%; max-width: 400px; display: none; flex-direction: column; gap: 12px; }
+        video { width: 100%; border-radius: 14px; background: #000; border: 2px solid #1f2937; transform: scaleX(-1); }
+        .status-tag { text-align: center; font-size: 14px; color: #10b981; font-weight: bold; }
+        
+        footer { margin-bottom: 20px; text-align: center; }
+        .footer-tag { font-size: 11px; color: #9ca3af; background: rgba(3, 7, 18, 0.6); padding: 8px 16px; border-radius: 9999px; border: 1px solid rgba(31, 41, 55, 0.5); display: inline-block; }
+        a { color: #2563eb; text-decoration: underline; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><span class="red">420</span> <span class="blue">ROBOTICS</span></h1>
+        <p class="subtitle">Camera System</p>
+    </header>
+
+    <main>
+        <!-- Main Selection Menu -->
+        <div id="menu-layer" class="menu">
+            <button id="btn-camera" onclick="startLocalCamera()">Setup Camera Mode</button>
+            <button id="btn-viewer" onclick="alert('Viewer Mode requires signaling server config.')">Open Viewer Mode</button>
+        </div>
+
+        <!-- Live Camera Stream View Layer -->
+        <div id="video-layer" class="video-container">
+            <video id="local-preview" autoplay playsinline muted></video>
+            <div id="stream-status" class="status-tag">SYSTEM LIVE</div>
+            <button id="btn-back" style="background: #374151; padding: 12px;" onclick="stopLocalCamera()">Close Camera</button>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-tag">
+            POWERED BY 420 ROBOTICS — <a href="https://420robotics.org" target="_blank">420Robotics.org</a>
+        </div>
+    </footer>
+
+    <script>
+        let localStream = null;
+
+        async function startLocalCamera() {
+            const menuLayer = document.getElementById('menu-layer');
+            const videoLayer = document.getElementById('video-layer');
+            const videoElement = document.getElementById('local-preview');
+            const statusTag = document.getElementById('stream-status');
+
+            try {
+                // Request native hardware permissions for the camera video stream
+                localStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "environment" }, // Standard robot/back-facing camera tracking
+                    audio: false
+                });
+                
+                // Attach hardware stream directly to HTML5 video element
+                videoElement.srcObject = localStream;
+                
+                // Toggle view layers smoothly
+                menuLayer.style.display = 'none';
+                videoLayer.style.display = 'flex';
+                statusTag.innerText = "SYSTEM LIVE: CAPTURING FRAMES";
+                statusTag.style.color = "#10b981";
+
+            } catch (error) {
+                console.error("Hardware access failed:", error);
+                alert("Camera Initialization Failed: Ensure WebKit/App container permissions are enabled for camera hardware access.");
+            }
+        }
+
+        function stopLocalCamera() {
+            const menuLayer = document.getElementById('menu-layer');
+            const videoLayer = document.getElementById('video-layer');
+            const videoElement = document.getElementById('local-preview');
+
+            if (localStream) {
+                // Shut down camera hardware sensors to save battery
+                localStream.getTracks().forEach(track => track.stop());
+                videoElement.srcObject = null;
+            }
+
+            // Return to main menu layout
+            videoLayer.style.display = 'none';
+            menuLayer.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
